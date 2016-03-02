@@ -27,7 +27,7 @@ GNU Affero GPL 3.0에 따라 자유롭게 사용하실 수 있습니다. 라이�
     $_its->purgeCache();
   
     /* 
-     * object YonginITS::getBusInfo(int $method = 2, string $itsid = null)
+     * SimpleXMLElement YonginITS::getBusInfo(int $method = 2, string $itsid = null)
      * 인수: 메서드, 노선ID
      * 버스 정보를 가져옵니다.
      * GBIS와는 달리 정류소 정보, 차량 정보, 노선 경로가 통합되어 있습니다.
@@ -40,11 +40,28 @@ GNU Affero GPL 3.0에 따라 자유롭게 사용하실 수 있습니다. 라이�
      *  6: 운행중인 차량 목록을 가져옴. $itsid에 노선ID 필요. 위치는 좌표로만 나옴. 하지만 반드시 정류소 좌표와 동일하게 나오므로 정류소 정보에서 찾으면 ok.
      *  7: ITS에 입력되어 있는 모든 정류소 목록을 가져옴. $itsid는 null. 정류소ID는 GBIS와 공용인듯.
      */
-    print_r($_its->getBusInfo(2, '41420001'));
-    print_r($_its->getBusInfo(3, '41420001'));
-    print_r($_its->getBusInfo(4, '41420001'));
-    print_r($_its->getBusInfo(5, '41420001'));
-    print_r($_its->getBusInfo(6, '41420001'));
+    print_r($_its->getBusInfo(2, "41420001"));
+    print_r($_its->getBusInfo(3, "41420001"));
+    print_r($_its->getBusInfo(4, "41420001"));
+    print_r($_its->getBusInfo(5, "41420001"));
+    print_r($_its->getBusInfo(6, "41420001"));
+    
+    /*
+     * Array YonginITS::getStationInfo(string $itsid = null)
+     * 인수: 정류소ID
+     * 반환값: ArrivalList, RouteList.
+     * ArrivalList: 도착 예정 버스 노선 이름을 index로 갖는 배열
+     * ArrivalList[BusName][0]: 노선 이름
+     * ArrivalList[BusName][1]: 도착 예정 버스가 n번째 전 정류소에 있을 때 "n"
+     * ArrivalList[BusName][2]: 도착 예정 시간 (분)
+     * ArrivalList[BusName][3]: 다음 정류소, 반대편 종점
+     *
+     * RouteList: 이 정류소를 운행하는 버스 노선 이름을 index로 갖는 배열
+     * RouteList[BusName][0]: 노선 이름
+     * RouteList[BusName][1]: 배차간격 (ITS가 망가져서 모두 "정보없음"으로 나옴)
+     * RouteList[BusName][2]: 운행 방향
+     * 
+    print_r($_its->getStationInfo("228508450"));
 
 ### 출력
 출력값은 나도 설명하기 귀찮으니 눈치껏 쓰시기 바랍니다.
@@ -155,6 +172,47 @@ GNU Affero GPL 3.0에 따라 자유롭게 사용하실 수 있습니다. 라이�
 		)
 
 	)
+	Array
+	(
+	    [ArrivalList] => Array
+		(
+		    [15-2] => Array
+			(
+			    [0] => 15-2
+			    [1] => 1
+			    [2] => 1
+			    [3] => 용인포은아트홀 (신봉동.광교산등산로입구 방면)
+			)
+			**(중략)**
+		    [15-1] => Array
+			(
+			    [0] => 15-1
+			    [1] => 1
+			    [2] => 0
+			    [3] =>  (죽전역.수지레스피아 방면)
+			)
+
+		)
+
+	    [RouteList] => Array
+		(
+		    [1] => Array
+			(
+			    [0] => 1
+			    [1] => 정보없음
+			    [2] => 죽전역
+			)
+			**(중략)**
+		    [82-1] => Array
+			(
+			    [0] => 82-1
+			    [1] => 정보없음
+			    [2] => 죽전역.신세계백화점
+			)
+		)
+	)
+
+
 
 ## 팁
 쓰면서 어려웠던 부분 몇 가지를 소개합니다.
